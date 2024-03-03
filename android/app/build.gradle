@@ -1,0 +1,86 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+android {
+    namespace "com.example.my_app_1"
+    compileSdk flutter.compileSdk
+    ndkVersion "D:\Unity_Editor\2022.3.15f1\Editor\Data\PlaybackEngines\AndroidPlayer\NDK"
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    def getLatestSdkVersion = {
+        def sdkDir = android.sdkDirectory
+        def sdkManagerPath = sdkDir.getAbsolutePath() + "/cmdline-tools/latest/bin/sdkmanager"
+        
+        // Run sdkmanager to get the list of installed platforms
+        def process = sdkManagerPath.execute()
+        process.waitFor()
+
+        // Extract the highest version from the output
+        def output = process.text
+        def versions = output.findAll(/\d+\.\d+/)
+        def latestVersion = versions.max { it.tokenize('.').collect { it as int } }
+
+        return latestVersion
+    }
+
+    defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId "com.example.my_app_1"
+        // You can update the following values to match your application needs.
+        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
+        minSdkVersion 27
+        targetSdkVersion getLatestSdkVersion()
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+    }
+
+    buildTypes {
+        release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+
+dependencies {
+    implementation project(':unityLibrary')
+}

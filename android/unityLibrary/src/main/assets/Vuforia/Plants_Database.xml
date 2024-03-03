@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig>
+  <Tracking>
+    <ImageTarget name="monstera-leaf2" size="200.000000 300.000000" />
+    <ImageTarget name="monstera-leaf" size="500.000000 500.000000" />
+  </Tracking>
+</QCARConfig>
